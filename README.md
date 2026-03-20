@@ -2,4 +2,6 @@
 
 Static marketing site for Bubulo Medical — weight loss that’s built for you.
 
-Open `bubulo-medical (1).html` in a browser to view locally.
+**Live site:** [GitHub Pages](https://melissaito.github.io/bubolo-prototype/)
+
+Open `index.html` locally or run a static server in this folder.
