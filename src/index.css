@@ -1,0 +1,12 @@
+@tailwind utilities;
+
+#why-bubulo-marquee-root,
+#why-bubulo-marquee-root *,
+#why-bubulo-marquee-root *::before,
+#why-bubulo-marquee-root *::after {
+  box-sizing: border-box;
+}
+
+#why-bubulo-marquee-root .marquee-row:hover .marquee-track {
+  animation-play-state: paused;
+}
