@@ -28,8 +28,23 @@ Deploy the **contents of `dist/`**, not the repo root `index.html` alone.
 
 ### Deploy to GitHub Pages
 
-Pushes to `main` run [`.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml): `npm ci` → `npm run build` → upload `dist/` to GitHub Pages.
+This repo is a **Vite** build: GitHub Pages must serve **`dist/`**, not the root `index.html` alone.
 
-1. Repo **Settings → Pages**: set **Source** to **GitHub Actions** (not “Deploy from a branch”).
-2. Push `main`; the **Actions** tab shows the run. The site stays at  
-   **https://melissaito.github.io/bubolo-prototype/** (project site URL).
+**Option A — GitHub Actions (recommended)**  
+Add [`.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml) to the repo (it exists locally under `.github/`). It runs `npm ci` → `npm run build` → publishes `dist/`.
+
+1. **Settings → Pages → Build and deployment:** set **Source** to **GitHub Actions**.
+2. From your machine (Cursor/GitHub OAuth often blocks workflow files without the `workflow` scope):
+
+   ```bash
+   git add .github && git commit -m "ci: GitHub Pages deploy" && git push origin main
+   ```
+
+3. Check the **Actions** tab; when green, the site is at  
+   **https://melissaito.github.io/bubolo-prototype/**
+
+**Option B — Manual**  
+Run `npm run build` locally and upload or push the **contents of `dist/`** to whatever branch/source your Pages site uses.
+
+**Large pushes:** if `git push` fails with `http.postBuffer`, run  
+`git config http.postBuffer 524288000` in this repo and push again.
