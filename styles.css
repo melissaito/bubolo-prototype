@@ -370,6 +370,12 @@ section { position: relative; }
   letter-spacing: -0.5px;
   color: var(--navy);
 }
+/* Headings: reset UA margins so Lora matches div.section-headline */
+h2.section-headline {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 500;
+}
 .section-headline em {
   color: var(--accent-text);
 }
@@ -518,10 +524,6 @@ section { position: relative; }
   min-width: min(100%, 320px);
   max-width: 768px;
 }
-.testimonials-title.section-headline {
-  font-size: clamp(32px, 4vw, 48px);
-  line-height: 1.12;
-}
 .testimonials-rating-block {
   flex-shrink: 0;
   text-align: right;
@@ -609,7 +611,7 @@ section { position: relative; }
   align-items: center;
   gap: 11px;
   height: 58px;
-  padding: 0 24px 0 12px;
+  padding: 0 18px;
   border-radius: 100px;
   border: 1px solid rgba(255, 255, 255, 0.35);
   background: rgba(255, 255, 255, 0.22);
@@ -627,6 +629,10 @@ section { position: relative; }
   background: rgba(255, 255, 255, 0.32);
   transform: translateX(-50%) translateY(-1px);
 }
+.tcard-play-overlay[hidden],
+.tcard-video--playing .tcard-play-overlay {
+  display: none !important;
+}
 .tcard-play-overlay-icon {
   width: 30px;
   height: 30px;
@@ -638,43 +644,62 @@ section { position: relative; }
   justify-content: center;
   padding-left: 2px;
 }
+/* Same glass pill as .tcard-play-overlay */
 .tcard-video-controls {
   position: absolute;
-  left: 12px;
-  right: 12px;
-  bottom: 16px;
+  left: 50%;
+  bottom: 28px;
+  right: auto;
+  transform: translateX(-50%);
   z-index: 3;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  padding: 10px 14px;
+  gap: 11px;
+  height: 58px;
+  padding: 0 16px;
   border-radius: 100px;
-  background: rgba(15, 31, 46, 0.55);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  color: var(--white);
+  font-family: inherit;
+  box-sizing: border-box;
+  transition: background 0.2s, transform 0.2s;
+}
+.tcard-video-controls:hover {
+  background: rgba(255, 255, 255, 0.32);
 }
 .tcard-video-controls[hidden] {
   display: none !important;
 }
+/* Match .tcard-play-overlay-icon: white circle + navy glyphs */
 .tcard-btn-playpause,
 .tcard-btn-mute {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 44px;
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
   padding: 0;
   border: none;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.2);
-  color: var(--white);
+  background: var(--white);
+  color: var(--navy);
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background 0.2s, transform 0.2s;
 }
 .tcard-btn-playpause:hover,
 .tcard-btn-mute:hover {
-  background: rgba(255, 255, 255, 0.32);
+  background: rgba(255, 255, 255, 0.92);
+  transform: scale(1.04);
+}
+.tcard-btn-playpause svg,
+.tcard-btn-mute svg {
+  display: block;
+  margin: 0;
 }
 .tcard-btn-mute .tcard-icon-volume-off {
   display: none;
