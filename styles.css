@@ -550,13 +550,16 @@ section { position: relative; }
 .testimonials-carousel {
   position: relative;
 }
-.testimonials-track {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 20px;
-  max-width: 1180px;
-  margin: 0 auto;
-  justify-items: center;
+/* Four-up grid only at 1025px+; 1024px and below use the slider (see TABLET breakpoint) */
+@media (min-width: 1025px) {
+  .testimonials-track {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 20px;
+    max-width: 1180px;
+    margin: 0 auto;
+    justify-items: center;
+  }
 }
 
 .tcard {
@@ -570,52 +573,61 @@ section { position: relative; }
 .tcard-video {
   position: relative;
   width: 100%;
-  height: 449px;
+  aspect-ratio: 9 / 16;
+  height: auto;
   border-radius: 16px;
   border: 2px solid var(--white);
   overflow: hidden;
   box-shadow: 0 4px 24px rgba(15, 31, 46, 0.06);
+  background: var(--navy);
+  cursor: pointer;
 }
-.tcard-img-inner {
+.tcard-video--playing {
+  cursor: default;
+}
+.tcard-video-media {
   width: 100%;
   height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--serif);
-  font-size: 48px;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.65);
+  display: block;
+  object-fit: cover;
+  object-position: center;
   transition: transform 0.4s;
 }
-.tcard:hover .tcard-img-inner { transform: scale(1.03); }
-.tcard-watch {
+.tcard:hover .tcard-video:not(.tcard-video--playing) .tcard-video-media {
+  transform: scale(1.03);
+}
+.tcard-video--playing .tcard-video-media {
+  transform: none;
+}
+.tcard-play-overlay {
   position: absolute;
   left: 50%;
   bottom: 28px;
   transform: translateX(-50%);
+  z-index: 2;
   display: inline-flex;
   align-items: center;
   gap: 11px;
   height: 58px;
   padding: 0 24px 0 12px;
   border-radius: 100px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
   background: rgba(255, 255, 255, 0.22);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   color: var(--white);
   font-size: 16px;
   font-weight: 500;
-  text-decoration: none;
+  font-family: inherit;
+  cursor: pointer;
   white-space: nowrap;
-  border: 1px solid rgba(255, 255, 255, 0.35);
   transition: background 0.2s, transform 0.2s;
 }
-.tcard-watch:hover {
+.tcard-play-overlay:hover {
   background: rgba(255, 255, 255, 0.32);
   transform: translateX(-50%) translateY(-1px);
 }
-.tcard-watch-icon {
+.tcard-play-overlay-icon {
   width: 30px;
   height: 30px;
   border-radius: 50%;
@@ -625,6 +637,53 @@ section { position: relative; }
   align-items: center;
   justify-content: center;
   padding-left: 2px;
+}
+.tcard-video-controls {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 16px;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 100px;
+  background: rgba(15, 31, 46, 0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.tcard-video-controls[hidden] {
+  display: none !important;
+}
+.tcard-btn-playpause,
+.tcard-btn-mute {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--white);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.tcard-btn-playpause:hover,
+.tcard-btn-mute:hover {
+  background: rgba(255, 255, 255, 0.32);
+}
+.tcard-btn-mute .tcard-icon-volume-off {
+  display: none;
+}
+.tcard-btn-mute.is-muted .tcard-icon-volume-on {
+  display: none;
+}
+.tcard-btn-mute.is-muted .tcard-icon-volume-off {
+  display: block;
 }
 .tcard-quote {
   margin: 0;
@@ -963,7 +1022,7 @@ footer {
 }
 .footer-panel {
   background: var(--testimonials-rating);
-  border-radius: 0;
+  border-radius: 16px;
   width: 100%;
   box-sizing: border-box;
   min-height: 195px;
@@ -1327,7 +1386,7 @@ footer {
 .fade-up-delay-3 { transition-delay: 0.3s; }
 .fade-up-delay-4 { transition-delay: 0.4s; }
 
-/* ─── TABLET (1024px) ─── */
+/* ─── TABLET / MOBILE: 1024px and below (slider testimonials, stacked hero, etc.) ─── */
 @media (max-width: 1024px) {
   #hero { padding: 100px 40px 64px; }
   .hero-inner {
@@ -1352,10 +1411,74 @@ footer {
   }
   .hero-sub { max-width: 100%; }
   .values-grid { grid-template-columns: repeat(2, 1fr); }
+  /* Testimonials: swipeable horizontal slider (viewport width ≤ 1024px; grid is min-width: 1025px only) */
+  /* Slide width = video frame width (min of vw cap, pixel cap, and 9:16 max given height limits) */
+  #testimonials {
+    --tcard-slide-w: min(76vw, 504px, calc(9 / 16 * min(58vh, 420px)));
+  }
+  .testimonials-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+  .testimonials-rating-block {
+    text-align: left;
+  }
+  .testimonials-carousel {
+    width: 100vw;
+    max-width: 100vw;
+    margin-left: -60px;
+    margin-right: -60px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: max(0px, calc(50vw - var(--tcard-slide-w) / 2));
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x;
+  }
+  .testimonials-carousel::-webkit-scrollbar {
+    display: none;
+  }
   .testimonials-track {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 24px 20px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 20px;
+    width: max-content;
     max-width: none;
+    margin: 0;
+    padding-inline: 0;
+    padding-bottom: 12px;
+    justify-content: flex-start;
+    text-align: left;
+  }
+  .tcard {
+    flex: 0 0 var(--tcard-slide-w);
+    width: var(--tcard-slide-w);
+    max-width: var(--tcard-slide-w);
+    margin: 0;
+    align-items: center;
+    scroll-snap-align: center;
+    scroll-snap-stop: always;
+  }
+  .tcard-video {
+    width: 100%;
+    max-width: 100%;
+    aspect-ratio: 9 / 16;
+    height: auto;
+    margin-inline: auto;
+  }
+  .tcard-quote,
+  .tcard-info {
+    max-width: 100%;
+    width: 100%;
+    margin-inline: auto;
+    text-align: center;
+  }
+  .testimonials-dots {
+    display: flex;
   }
   .approach-grid { grid-template-columns: 1fr; gap: 48px; }
   .approach-img { aspect-ratio: 16/9; max-height: 360px; }
@@ -1403,7 +1526,10 @@ footer {
   section { padding: 72px 0; }
   #proof { padding: 64px 0; }
   #values { padding: 72px 0; }
-  #testimonials { padding: 72px 0; }
+  #testimonials {
+    padding: 72px 0;
+    --tcard-slide-w: min(50vw, 400px, calc(9 / 16 * min(52vh, 360px)));
+  }
   #approach { padding: 72px 0; }
   #steps { padding: 72px 0; }
   #why { padding: 72px 0; }
@@ -1434,49 +1560,14 @@ footer {
   .values-head .section-headline { font-size: 34px; }
   .values-grid { grid-template-columns: 1fr; gap: 16px; }
 
-  /* Testimonials — horizontal carousel */
-  .testimonials-head { flex-direction: column; align-items: flex-start; gap: 16px; margin-bottom: 32px; }
-  .testimonials-rating-block { text-align: left; }
-  .testimonials-carousel {
-    margin-left: -20px;
-    margin-right: -20px;
-    width: calc(100% + 40px);
-    overflow-x: auto;
-    overscroll-behavior-x: contain;
-    scroll-snap-type: x mandatory;
-    scroll-padding-inline: max(20px, calc(50vw - min(140px, 42.5vw)));
-    scrollbar-width: none;
-  }
-  .testimonials-carousel::-webkit-scrollbar {
-    display: none;
-  }
-  .testimonials-track {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    gap: 16px;
-    width: max-content;
-    padding: 0 max(20px, calc(50vw - min(140px, 42.5vw))) 8px;
-    justify-content: flex-start;
-  }
-  .tcard {
-    flex: 0 0 min(280px, 85vw);
-    width: min(280px, 85vw);
-    scroll-snap-align: center;
-    scroll-snap-stop: always;
-  }
-  .tcard-video {
-    height: min(449px, 58vh);
-  }
+  /* Testimonials — typography (--tcard-slide-w set on #testimonials above) */
+  .testimonials-head { margin-bottom: 32px; }
   .tcard-quote {
     font-size: 15px;
     line-height: 1.45;
   }
   .tcard-name { font-size: 17px; }
   .tcard-result { font-size: 13px; }
-  .testimonials-dots {
-    display: flex;
-  }
 
   /* Approach */
   .approach-grid { grid-template-columns: 1fr; gap: 40px; }
