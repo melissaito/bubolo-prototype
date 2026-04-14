@@ -189,7 +189,7 @@ body {
   font-family: var(--serif);
   font-size: clamp(36px, 4vw, 72px);
   font-weight: 500;
-  line-height: 1.05;
+  line-height: 0.98;
   color: var(--navy);
   margin-bottom: 28px;
   letter-spacing: -1px;
