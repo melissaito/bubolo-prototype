@@ -1,6 +1,6 @@
-# Bubulo Medical
+# Bubolo Medical
 
-Static marketing site for Bubulo Medical — weight loss that’s built for you.
+Static marketing site for Bubolo Medical — weight loss that’s built for you.
 
 **Live site:** [GitHub Pages](https://melissaito.github.io/bubolo-prototype/)
 
