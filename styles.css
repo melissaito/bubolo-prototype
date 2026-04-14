@@ -141,13 +141,16 @@ body {
   background: #f2f8f9;
   border-bottom: none;
   border-image: none;
-  height: 752px;
+  min-height: 752px;
+  height: auto;
   display: flex;
-  align-items: center;
+  /* flex-start avoids clipping the headline when inner content is taller than the viewport band */
+  align-items: flex-start;
   justify-content: center;
-  padding: calc(96px + env(safe-area-inset-top, 0px)) 80px 0;
+  padding: calc(96px + env(safe-area-inset-top, 0px)) 80px 48px;
   position: relative;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: visible;
 }
 .hero-inner {
   width: 100%;
@@ -159,7 +162,7 @@ body {
   align-items: center;
   position: relative;
   z-index: 2;
-  height: 100%;
+  min-height: 0;
 }
 #hero::before {
   content: '';
@@ -177,7 +180,11 @@ body {
   background: radial-gradient(circle, rgba(146,193,201,0.08) 0%, transparent 70%);
   pointer-events: none;
 }
-.hero-content { position: relative; z-index: 2; }
+.hero-content {
+  position: relative;
+  z-index: 3;
+  min-width: 0;
+}
 .hero-headline {
   font-family: var(--serif);
   font-size: clamp(36px, 4vw, 72px);
@@ -239,11 +246,13 @@ body {
 }
 .hero-image-wrap {
   position: relative;
-  z-index: 2;
+  z-index: 1;
   display: flex;
   justify-content: flex-start;
   align-items: flex-end;
-  height: 100%;
+  align-self: stretch;
+  min-height: 480px;
+  height: auto;
   min-width: 0;
 }
 .hero-static-img {
@@ -258,7 +267,8 @@ body {
 .hero-marquee-wrap {
   width: 100%;
   max-width: 500px;
-  height: 100%;
+  height: min(620px, 70vh);
+  min-height: 320px;
   overflow: hidden;
   background: transparent;
 }
@@ -327,11 +337,18 @@ body {
 
 @media (min-width: 1025px) {
   #hero {
-    height: 752px;
-    padding: calc(96px + env(safe-area-inset-top, 0px)) 80px 0;
+    min-height: 752px;
+    height: auto;
+    padding: calc(96px + env(safe-area-inset-top, 0px)) 80px 48px;
+  }
+  .hero-inner {
+    min-height: 560px;
   }
   .hero-image-wrap {
-    height: 100%;
+    min-height: 560px;
+  }
+  .hero-marquee-wrap {
+    height: min(620px, calc(100vh - 220px));
   }
 }
 
