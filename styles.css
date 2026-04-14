@@ -347,7 +347,7 @@ body {
   }
   .hero-inner {
     grid-template-columns: 1fr;
-    gap: 36px;
+    gap: 0;
     align-items: center;
   }
   .hero-content {
@@ -1649,7 +1649,7 @@ footer {
   .hero-content {
     padding-block: clamp(40px, 6.5vw, 88px);
   }
-  .hero-inner { gap: 36px; }
+  .hero-inner { gap: 0; }
   .hero-headline { font-size: 42px; letter-spacing: -0.5px; }
   .hero-sub { font-size: 15px; }
   .hero-ctas { flex-direction: column; align-items: flex-start; gap: 12px; }
