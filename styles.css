@@ -328,7 +328,7 @@ body {
 @media (min-width: 1025px) {
   #hero {
     height: 752px;
-    padding: 0 80px;
+    padding: calc(96px + env(safe-area-inset-top, 0px)) 80px 0;
   }
   .hero-image-wrap {
     height: 100%;
