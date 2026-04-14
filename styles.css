@@ -1575,6 +1575,9 @@ footer {
     padding: 0 20px;
     min-height: auto;
   }
+  .hero-content {
+    padding-top: 48px;
+  }
   .hero-inner { gap: 16px; }
   .hero-marquee-wrap {
     max-width: 100%;
